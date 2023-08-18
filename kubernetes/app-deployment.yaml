@@ -15,6 +15,7 @@ spec:
       containers:
         - name: app
           image: acast83/igor-app
+          imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: secret-envs

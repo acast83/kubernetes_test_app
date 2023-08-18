@@ -32,20 +32,19 @@ jobs:
         docker build -f Dockerfile.app -t ${{ secrets.DOCKERHUB_USERNAME }}/igor-app:${{ github.sha }} .
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/igor-app:${{ github.sha }}
 
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v1
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: eu-central-1
-#
-#    - name: Set up kubectl for EKS  #igor-app-cluster
-#      run: |
-#        aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-#
-#    - name: Update Kubernetes deployments
-#      run: |
-#        kubectl set image deployment/frontend-deployment frontend=${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
-#        kubectl set image deployment/backend-deployment backend=${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
-#
-#
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+
+    - name: Set up kubectl for EKS  #igor-app-cluster
+      run: |
+        aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+    - name: Update Kubernetes deployments
+      run: |
+        kubectl set image deployment/frontend-deployment frontend=${{ secrets.DOCKERHUB_USERNAME }}/igor-frontend:${{ github.sha }}
+        kubectl set image deployment/app-deployment app=${{ secrets.DOCKERHUB_USERNAME }}/igor-app:${{ github.sha }}
+

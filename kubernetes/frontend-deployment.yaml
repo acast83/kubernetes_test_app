@@ -15,6 +15,7 @@ spec:
       containers:
         - name: frontend
           image: acast83/igor-frontend
+          imagePullPolicy: Always
           env:
             - name: APP_HOST
               value: app-service
