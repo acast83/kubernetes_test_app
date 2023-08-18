@@ -1,0 +1,45 @@
+services:
+
+  db:
+    container_name: db
+    restart: always
+    image: postgres
+    
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+  
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+
+    depends_on:
+      - db
+
+    volumes:
+      - ./logs:/var/log/app/
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    
+    depends_on:
+      - app
+
+    ports:
+      - $NGINX_EXPOSED_ON:80
+
+    environment:
+      APP_HOST: "app"
+

@@ -1,0 +1,34 @@
+services:
+
+  db:
+    restart: always
+    image: postgres
+    
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+  
+  app:
+    image: igorjeremic/testapp
+
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+
+    depends_on:
+      - db
+
+    volumes:
+      - ./logs:/var/log/app/
+
+  nginx:
+    image: igorjeremic/testnginx
+    
+    depends_on:
+      - app
+
+    ports:
+      - $NGINX_EXPOSED_ON:80
