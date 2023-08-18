@@ -72,9 +72,23 @@ class MainHandler(tornado.web.RequestHandler):
 
 class DBHandler(tornado.web.RequestHandler):
     async def get(self):
+        from datetime import datetime
+
+
         result = [row.data for row in await TestModel.filter().all()]
+
+        out_res = []
+
+        for dt in result:
+            # Convert the string to a datetime object
+            date_obj = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S.%f")
+
+            # Convert the datetime object back to a string with the desired format
+            formatted_date_string = date_obj.strftime("%d.%B.%Y %H:%M:%S.%f")
+            out_res.append(formatted_date_string)
+
         log.debug(f'GET table-content has been triggered, returning {len(result)} rows')
-        self.write(json.dumps({"rows": result}))
+        self.write(json.dumps({"rows": out_res}))
 
     async def post(self):
         item = TestModel(data=str(datetime.datetime.now()))
