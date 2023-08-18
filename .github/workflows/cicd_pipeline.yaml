@@ -24,12 +24,12 @@ jobs:
 
     - name: Build and push frontend image
       run: |
-        docker build -f Dockerfile.nginx -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }} ./path-to-frontend-code/
+        docker build -f Dockerfile.nginx -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }} .
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
 
     - name: Build and push backend image
       run: |
-        docker build -f Dockerfile.app -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }} ./path-to-backend-code/
+        docker build -f Dockerfile.app -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }} .
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
 #    - name: Configure AWS credentials
